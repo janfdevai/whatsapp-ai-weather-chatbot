@@ -1566,7 +1566,7 @@ wheels = [
 ]
 
 [[package]]
-name = "whatsapp-ai-chatbot"
+name = "whatsapp-ai-weather-chatbot"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

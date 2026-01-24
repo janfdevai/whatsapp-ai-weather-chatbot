@@ -24,7 +24,7 @@ A production-ready, AI-powered WhatsApp chatbot built with **FastAPI**, **LangGr
 ## 📂 Project Structure
 
 ```text
-whatsapp-ai-chatbot/
+whatsapp-ai-weather-chatbot/
 ├── app/
 │   ├── agents/              # AI Agent logic and graph definitions
 │   │   ├── chatbot_agent/   # Modular chatbot implementation
@@ -59,7 +59,7 @@ Clone the repository and install dependencies:
 
 ```bash
 git clone <repository-url>
-cd whatsapp-ai-chatbot
+cd whatsapp-ai-weather-chatbot
 uv sync
 ```
 
@@ -80,7 +80,7 @@ OPENAI_API_KEY=your_openai_api_key
 # Optional: LangSmith Tracing
 LANGSMITH_TRACING=true
 LANGSMITH_API_KEY=your_langsmith_api_key
-LANGSMITH_PROJECT=whatsapp-ai-chatbot
+LANGSMITH_PROJECT=whatsapp-ai-weather-chatbot
 ```
 
 ### 4. Run the Application

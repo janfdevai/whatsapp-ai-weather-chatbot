@@ -1,5 +1,5 @@
 [project]
-name = "whatsapp-ai-chatbot"
+name = "whatsapp-ai-weather-chatbot"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
