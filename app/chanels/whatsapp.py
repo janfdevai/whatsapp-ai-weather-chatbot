@@ -108,9 +108,7 @@ async def run_agent_and_send_reply(message, from_number):
 
         # 2. Send the message
         if response.get("image_path"):
-            await send_whatsapp_image_message(
-                from_number, "This should be a Image", response.get("image_path")
-            )
+            await send_whatsapp_text_message(from_number, "This should be a Image")
         else:
             await send_whatsapp_text_message(from_number, answer)
     except Exception as e:
