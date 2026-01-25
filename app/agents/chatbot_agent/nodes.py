@@ -20,6 +20,7 @@ def llm_call(state: MessagesState):
             )
         ],
         "llm_calls": state.get("llm_calls", 0) + 1,
+        "image_path": state.get("image_path", ""),
     }
 
 

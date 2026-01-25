@@ -48,12 +48,27 @@ async def mark_message_as_read(message_id: str):
     await client.post(url, json=payload, headers=headers)
 
 
-async def send_whatsapp_message(to_number: str, text: str):
+async def send_whatsapp_text_message(to_number: str, text: str):
     payload = {
         "messaging_product": "whatsapp",
         "to": to_number,
         "type": "text",
         "text": {"body": text},
+    }
+
+    await client.post(url, json=payload, headers=headers)
+
+
+async def send_whatsapp_image_message(to_number: str, answer, image_path: str):
+    payload = {
+        "messaging_product": "whatsapp",
+        "recipient_type": "individual",
+        "to": to_number,
+        "type": "image",
+        "image": {
+            "link": "https://static.vecteezy.com/vite/assets/photo-masthead-375-BoK_p8LG.webp",
+            "caption": answer,
+        },
     }
 
     await client.post(url, json=payload, headers=headers)
@@ -86,13 +101,21 @@ async def run_agent_and_send_reply(message, from_number):
             },
             {"configurable": {"thread_id": from_number}},
         )
+
+        print("MODEL RESPONSE: ", response)
+
         answer = response["messages"][-1].content
 
         # 2. Send the message
-        await send_whatsapp_message(from_number, answer)
+        if response.get("image_path"):
+            await send_whatsapp_image_message(
+                from_number, "This should be a Image", response.get("image_path")
+            )
+        else:
+            await send_whatsapp_text_message(from_number, answer)
     except Exception as e:
         print(f"Error in background task: {e}")
-        await send_whatsapp_message(
+        await send_whatsapp_text_message(
             from_number, "Agent is not available right now. Please try again later."
         )
 
@@ -117,7 +140,7 @@ async def process_request(request: Request, background_tasks: BackgroundTasks):
 
     except Exception as e:
         print(f"Error: {e}")
-        await send_whatsapp_message(
+        await send_whatsapp_text_message(
             from_number, "Agent is not available right now. Please try again later."
         )
 

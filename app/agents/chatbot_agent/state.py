@@ -14,4 +14,5 @@ class UserState(TypedDict):
 class MessagesState(TypedDict):
     messages: Annotated[list[AnyMessage], operator.add]
     user: Annotated[UserState, merge_user]
+    image_path: str
     llm_calls: int
