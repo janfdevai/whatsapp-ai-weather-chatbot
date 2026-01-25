@@ -59,18 +59,29 @@ async def send_whatsapp_message(to_number: str, text: str):
     await client.post(url, json=payload, headers=headers)
 
 
-async def run_agent_and_send_reply(text_body, from_number, message_id):
+async def process_message_type(message) -> str:
+    if "text" in message:
+        return message["text"]["body"]
+    elif "location" in message:
+        return str(message["location"])
+
+    return "message not precessed"
+
+
+async def run_agent_and_send_reply(message, from_number):
     """
     All slow operations happen here, safely away from the Meta Webhook timeout.
     """
+    message_id = message.get("id")
     try:
         # Do these inside the background task to save time in the main thread
         await mark_message_as_read(message_id)
+        message_content = await process_message_type(message)
 
         # 1. Wait for the slow LLM
         response = await chatbot_agent.ainvoke(
             {
-                "messages": [{"role": "user", "content": text_body}],
+                "messages": [{"role": "user", "content": message_content}],
                 "user": {"phone_number": from_number},
             },
             {"configurable": {"thread_id": from_number}},
@@ -95,14 +106,11 @@ async def process_request(request: Request, background_tasks: BackgroundTasks):
             print("ENTRY", entry)
 
             message = entry["messages"][0]
-            message_id = message.get("id")
+
             from_number = remove_extra_one(message["from"])
-            text_body = message["text"]["body"]
 
             # IMMEDIATELY hand off to background task
-            background_tasks.add_task(
-                run_agent_and_send_reply, text_body, from_number, message_id
-            )
+            background_tasks.add_task(run_agent_and_send_reply, message, from_number)
 
         # ALWAYS return 200 OK immediately
         return {"status": "accepted"}
