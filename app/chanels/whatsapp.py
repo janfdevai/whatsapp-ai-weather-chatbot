@@ -13,6 +13,7 @@ VERIFY_TOKEN = os.getenv("VERIFY_TOKEN")
 WHATSAPP_ACCESS_TOKEN = os.getenv("WHATSAPP_ACCESS_TOKEN")
 PHONE_NUMBER_ID = os.getenv("PHONE_NUMBER_ID")
 GRAPH_API_VERSION = os.getenv("GRAPH_API_VERSION")
+MIME_TYPE = "image/png"
 
 url = f"https://graph.facebook.com/{GRAPH_API_VERSION}/{PHONE_NUMBER_ID}/messages"
 headers = {
@@ -59,15 +60,42 @@ async def send_whatsapp_text_message(to_number: str, text: str):
     await client.post(url, json=payload, headers=headers)
 
 
-async def send_whatsapp_image_message(to_number: str, answer, image_path: str):
-    print(image_path)
+async def upload_media(file_path):
+    image_url = (
+        f"https://graph.facebook.com/{GRAPH_API_VERSION}/{PHONE_NUMBER_ID}/media"
+    )
+
+    # For multipart/form-data, we shouldn't pass the application/json header
+    upload_headers = {
+        "Authorization": f"Bearer {WHATSAPP_ACCESS_TOKEN}",
+    }
+
+    with open(file_path, "rb") as f:
+        files = {"file": (os.path.basename(file_path), f, MIME_TYPE)}
+        data = {
+            "messaging_product": "whatsapp",
+            "type": MIME_TYPE,
+        }
+
+        response = await client.post(
+            image_url,
+            headers=upload_headers,
+            data=data,
+            files=files,
+        )
+
+    response.raise_for_status()
+    return response.json()
+
+
+async def send_whatsapp_image_message(to_number: str, answer, media_id: str):
     payload = {
         "messaging_product": "whatsapp",
         "recipient_type": "individual",
         "to": to_number,
         "type": "image",
         "image": {
-            "link": "https://images.all-free-download.com/images/thumbjpg/sunflower_yellow_flowers_215332.jpg",
+            "id": media_id,
             "caption": answer,
         },
     }
@@ -109,7 +137,10 @@ async def run_agent_and_send_reply(message, from_number):
 
         # 2. Send the message
         if response.get("image_path"):
-            await send_whatsapp_image_message(from_number, answer, "path")
+            image_uploaded = await upload_media(response.get("image_path"))
+            print("IMAGE UPLOADED: ", image_uploaded)
+            media_id = image_uploaded.get("id")
+            await send_whatsapp_image_message(from_number, answer, media_id)
         else:
             await send_whatsapp_text_message(from_number, answer)
     except Exception as e:
