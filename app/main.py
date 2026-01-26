@@ -11,10 +11,9 @@ async def root():
 
 
 @app.get("/webhook")
-async def verify_webhook(suscription: Subscription):
+async def verify_webhook(subscription: Subscription):
     """Handshake for Meta to verify your server."""
-    verify_subscription(suscription)
-    return Response(status_code=403)
+    return verify_subscription(subscription) or Response(status_code=403)
 
 
 @app.post("/webhook")
