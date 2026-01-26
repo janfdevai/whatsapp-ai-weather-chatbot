@@ -60,13 +60,14 @@ async def send_whatsapp_text_message(to_number: str, text: str):
 
 
 async def send_whatsapp_image_message(to_number: str, answer, image_path: str):
+    print(image_path)
     payload = {
         "messaging_product": "whatsapp",
         "recipient_type": "individual",
         "to": to_number,
         "type": "image",
         "image": {
-            "link": "https://static.vecteezy.com/vite/assets/photo-masthead-375-BoK_p8LG.webp",
+            "link": "https://images.all-free-download.com/images/thumbjpg/sunflower_yellow_flowers_215332.jpg",
             "caption": answer,
         },
     }
@@ -108,7 +109,7 @@ async def run_agent_and_send_reply(message, from_number):
 
         # 2. Send the message
         if response.get("image_path"):
-            await send_whatsapp_text_message(from_number, "This should be a Image")
+            await send_whatsapp_image_message(from_number, answer, "path")
         else:
             await send_whatsapp_text_message(from_number, answer)
     except Exception as e:
