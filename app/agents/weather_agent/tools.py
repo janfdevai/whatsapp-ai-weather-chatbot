@@ -6,7 +6,7 @@ from langchain.tools import ToolRuntime, tool
 from langgraph.types import Command
 
 from app import PROJECT_ROOT
-from app.agents.chatbot_agent.utils import generate_weather_image
+from app.agents.weather_agent.utils import generate_weather_image
 
 OPEN_WEATHER_API_KEY = os.getenv("OPEN_WEATHER_API_KEY")
 

@@ -1,6 +1,6 @@
 from langgraph.checkpoint.memory import InMemorySaver
 
-from app.agents.chatbot_agent.graph import chatbot_agent_builder
+from app.agents.weather_agent.graph import weather_agent_builder
 
 
 def compile_agent(builder, memory):
@@ -8,4 +8,4 @@ def compile_agent(builder, memory):
     return builder.compile(checkpointer=memory)
 
 
-chatbot_agent = compile_agent(chatbot_agent_builder, InMemorySaver())
+weather_agent = compile_agent(weather_agent_builder, InMemorySaver())

@@ -6,7 +6,7 @@ from agentevals.trajectory.llm import (
 )
 from langsmith import Client
 
-from app.agents.team import chatbot_agent
+from app.agents.team import weather_agent
 
 client = Client()
 
@@ -25,7 +25,7 @@ async def run_agent(inputs):
     config = {"configurable": {"thread_id": "eval-session"}}
 
     # Pass config as the second argument to invoke
-    outputs = await chatbot_agent.ainvoke(
+    outputs = await weather_agent.ainvoke(
         inputs,
         config=config,
     )

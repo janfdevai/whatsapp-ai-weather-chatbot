@@ -3,7 +3,7 @@ import operator
 from langchain.messages import AnyMessage
 from typing_extensions import Annotated, TypedDict
 
-from app.agents.chatbot_agent.utils import merge_user
+from app.agents.weather_agent.utils import merge_user
 
 
 class UserState(TypedDict):

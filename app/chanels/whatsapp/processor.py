@@ -1,6 +1,6 @@
 from fastapi import BackgroundTasks, Request, Response
 
-from app.agents.team import chatbot_agent
+from app.agents.team import weather_agent
 
 from .client import (
     mark_message_as_read,
@@ -37,7 +37,7 @@ async def run_agent_and_send_reply(message: dict, from_number: str):
         await mark_message_as_read(message_id)
         message_content = await process_message_type(message)
 
-        response = await chatbot_agent.ainvoke(
+        response = await weather_agent.ainvoke(
             {
                 "messages": [{"role": "user", "content": message_content}],
                 "user": {"phone_number": from_number},

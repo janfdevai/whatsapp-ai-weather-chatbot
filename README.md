@@ -28,7 +28,7 @@ A production-ready, AI-powered WhatsApp chatbot that provides real-time weather 
 whatsapp-ai-weather-chatbot/
 ├── app/
 │   ├── agents/              # AI Agent logic and graph definitions
-│   │   ├── chatbot_agent/   # Modular chatbot implementation
+│   │   ├── weather_agent/   # Modular chatbot implementation
 │   │   │   ├── graph.py     # LangGraph workflow definition
 │   │   │   ├── nodes.py     # Graph nodes (LLM calls, tools)
 │   │   │   ├── state.py     # State schemas (Messages, UserProfile)
