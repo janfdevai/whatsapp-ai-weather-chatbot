@@ -1,7 +1,7 @@
 [project]
 name = "whatsapp-ai-weather-chatbot"
 version = "0.1.0"
-description = "Add your description here"
+description = "A production-ready AI-powered WhatsApp weather chatbot built with FastAPI, LangGraph, and LangChain."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

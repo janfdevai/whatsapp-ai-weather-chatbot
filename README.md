@@ -1,6 +1,6 @@
-# 🤖 WhatsApp AI Chatbot
+# 🤖 WhatsApp AI Weather Chatbot
 
-A production-ready, AI-powered WhatsApp chatbot built with **FastAPI**, **LangGraph**, and **LangChain**. This project demonstrates a robust integration of LLMs with the WhatsApp Business API, utilizing background tasks to ensure high performance and reliability.
+A production-ready, AI-powered WhatsApp chatbot that provides real-time weather updates and visual summaries. Built with **FastAPI**, **LangGraph**, and **LangChain**, this project demonstrates a robust integration of LLMs with the WhatsApp Business API, utilizing the **OpenWeather API** to deliver context-aware weather information through background tasks.
 
 ---
 
@@ -8,6 +8,7 @@ A production-ready, AI-powered WhatsApp chatbot built with **FastAPI**, **LangGr
 
 - **Asynchronous Architecture**: Leverages FastAPI's `BackgroundTasks` to handle incoming webhooks instantly, avoiding Meta's strict 3-second timeout.
 - **Stateful AI Agent**: Uses **LangGraph** to manage conversation state, including user profiles (name, phone number) and message history.
+- **Weather Integration**: Fetches real-time weather data via **OpenWeather API** and generates visual weather summaries.
 - **Meta Webhook Integration**: Full support for WhatsApp Cloud API webhooks, including automated verification and message status updates (marking as read).
 - **LangSmith Tracing**: Integrated observability for debugging and monitoring agent performance.
 - **Easy Deployment**: Uses `uv` for lightning-fast dependency management and environment setup.
@@ -34,9 +35,15 @@ whatsapp-ai-weather-chatbot/
 │   │   │   ├── tools.py     # Custom tools for the agent
 │   │   │   └── utils.py     # Helper functions
 │   │   └── team.py          # Agent compilation and memory setup
-│   ├── chanels/             # Communication channels (e.g., WhatsApp)
-│   │   └── whatsapp.py      # Meta API integration and webhook logic
+│   ├── chanels/             # Communication channels
+│   │   └── whatsapp/        # WhatsApp integration logic
+│   │       ├── client.py    # WhatsApp API client (sending messages)
+│   │       ├── config.py    # WhatsApp-specific environment settings
+│   │       ├── models.py    # Pydantic models for webhooks
+│   │       ├── processor.py # Main logic for processing responses
+│   │       └── utils.py     # Media handling and verification helpers
 │   └── main.py              # FastAPI application entry point
+├── public/                  # Static assets (e.g., generated weather images)
 ├── .env                     # Environment variables
 ├── pyproject.toml           # Project dependencies
 └── README.md                # You are here!
@@ -52,6 +59,7 @@ whatsapp-ai-weather-chatbot/
 - [uv](https://docs.astral.sh/uv/) installed.
 - A Meta Developer account with a WhatsApp App configured.
 - [ngrok](https://ngrok.com/) for local tunneling.
+- [OpenWeatherMap API Key](https://openweathermap.org/api).
 
 ### 2. Installation
 
@@ -65,7 +73,7 @@ uv sync
 
 ### 3. Configuration
 
-Create a `.env` file in the root directory and fill in your credentials:
+Create a `.env` file in the root directory and fill in your credentials (see `.env.example`):
 
 ```env
 # Meta / WhatsApp Configuration
@@ -76,6 +84,9 @@ GRAPH_API_VERSION=v22.0
 
 # AI Configuration
 OPENAI_API_KEY=your_openai_api_key
+
+# Weather Configuration
+OPEN_WEATHER_API_KEY=your_openweather_api_key
 
 # Optional: LangSmith Tracing
 LANGSMITH_TRACING=true
